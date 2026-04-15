@@ -1,0 +1,152 @@
+"""
+Agent 4: Statistical Analysis Agent
+- Selects appropriate meta-analysis model
+- Generates metafor/meta R code
+- Interprets heterogeneity and publication bias
+- Outputs analysis narrative for Results section
+"""
+import json
+import anthropic
+from typing import List, Optional
+from shared.prompts import ANALYSIS_AGENT_PROMPT
+from shared.models import ExtractedStudy, AnalysisResult, OutcomeType
+
+
+def run_analysis_agent(
+    studies: List[ExtractedStudy],
+    effect_measure: Optional[str] = None,
+    subgroup_vars: List[str] = None,
+    sensitivity_scenarios: List[str] = None
+) -> Dict:
+    """
+    Generate complete R analysis code and interpret results.
+    
+    Returns:
+        {
+            "r_code": str,
+            "analysis_plan": str,
+            "results_narrative": str,
+            "tables": List[str],
+            "grade_assessment": str
+        }
+    """
+    from typing import Dict
+
+    client = anthropic.Anthropic()
+
+    if subgroup_vars is None:
+        subgroup_vars = []
+    if sensitivity_scenarios is None:
+        sensitivity_scenarios = ["leave-one-out", "high-ROB excluded"]
+
+    # Summarize extracted data for the agent
+    study_summaries = []
+    for s in studies:
+        po = s.primary_outcome
+        if po.outcome_type == OutcomeType.CONTINUOUS:
+            study_summaries.append({
+                "id": s.study_id,
+                "n1": s.n_intervention, "m1": po.intervention_mean, "sd1": po.intervention_sd,
+                "n2": s.n_control, "m2": po.control_mean, "sd2": po.control_sd,
+                "design": s.design.value,
+                "follow_up_wk": s.follow_up_weeks
+            })
+        elif po.outcome_type == OutcomeType.BINARY:
+            study_summaries.append({
+                "id": s.study_id,
+                "ai": po.intervention_events, "n1": po.intervention_total,
+                "ci": po.control_events, "n2": po.control_total,
+                "design": s.design.value
+            })
+
+    outcome_type = studies[0].primary_outcome.outcome_type.value if studies else "continuous"
+
+    user_message = f"""
+    Perform a complete meta-analysis for these {len(studies)} studies.
+
+    OUTCOME TYPE: {outcome_type}
+    EFFECT MEASURE (suggested): {effect_measure or 'auto-select'}
+    SUBGROUP VARIABLES: {subgroup_vars}
+    SENSITIVITY SCENARIOS: {sensitivity_scenarios}
+
+    STUDY DATA:
+    {json.dumps(study_summaries, indent=2)}
+
+    Please provide:
+
+    1. ANALYSIS PLAN: justify model choice (fixed vs random-effects), effect measure selection,
+       heterogeneity handling strategy
+
+    2. COMPLETE R CODE using metafor package:
+       - escalc() for effect size calculation
+       - rma() with method.tau="REML", hakn=TRUE
+       - Forest plot (forest()) with prediction interval
+       - Heterogeneity stats (I², τ², Q test)
+       - Subgroup analyses if requested
+       - Leave-one-out sensitivity analysis
+       - Egger's test and trim-and-fill
+       - Funnel plot
+
+    3. RESULTS NARRATIVE: Write a Results paragraph (2-3 sentences) interpreting
+       the pooled estimate, CI, heterogeneity, and publication bias
+
+    4. GRADE ASSESSMENT TABLE: Rate certainty of evidence (High/Moderate/Low/Very Low)
+       for: Risk of bias, Inconsistency, Indirectness, Imprecision, Publication bias
+
+    Return as JSON:
+    {{
+      "analysis_plan": "...",
+      "r_code": "complete R code as string",
+      "results_narrative": "...",
+      "grade_table": {{
+        "risk_of_bias": "serious|not serious",
+        "inconsistency": "serious|not serious",
+        "indirectness": "not serious",
+        "imprecision": "serious|not serious",
+        "publication_bias": "undetected|suspected",
+        "overall_certainty": "High|Moderate|Low|Very Low",
+        "rationale": "..."
+      }}
+    }}
+    """
+
+    print(f"[Agent 4: Analysis] Generating analysis for {len(studies)} studies...")
+
+    response = client.messages.create(
+        model="claude-sonnet-4-20250514",
+        max_tokens=4000,
+        system=ANALYSIS_AGENT_PROMPT,
+        messages=[{"role": "user", "content": user_message}]
+    )
+
+    raw = response.content[0].text.strip()
+    clean = raw.replace("```json", "").replace("```", "").strip()
+
+    try:
+        result = json.loads(clean)
+        print("[Agent 4: Analysis] ✓ Analysis plan and R code generated")
+        print(f"  → Evidence certainty: {result.get('grade_table', {}).get('overall_certainty', 'N/A')}")
+        return result
+    except json.JSONDecodeError:
+        # If JSON fails, return raw text wrapped
+        print("[Agent 4: Analysis] ⚠ JSON parse failed, returning raw response")
+        return {
+            "analysis_plan": "",
+            "r_code": raw,
+            "results_narrative": "",
+            "grade_table": {}
+        }
+
+
+def save_r_script(r_code: str, filename: str = "meta_analysis.R") -> None:
+    """Save R code to file with header."""
+    header = """# ============================================================
+# Meta-Analysis R Script
+# Generated by Agent 4: Statistical Analysis Agent
+# Run in R 4.x with: install.packages(c("metafor", "ggplot2"))
+# ============================================================
+
+"""
+    with open(filename, "w") as f:
+        f.write(header + r_code)
+    print(f"[Agent 4: Analysis] R script saved to {filename}")
