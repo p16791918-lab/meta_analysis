@@ -1,0 +1,26 @@
+PMID,Title,Decision,Reason
+36190501,"Breast Cancer Statistics, 2022",INCLUDE,"인종별(White/Black/Asian/Hispanic) 유방암 발생률 수치 제시, ACS 통계 데이터"
+31270761,"Social determinants of breast cancer risk, stage, and survival",INCLUDE,전 인종/민족 집단별 발생률 비교 포함된 메타분석·리뷰
+32940362,"Cancer statistics for adolescents and young adults, 2020",INCLUDE,미국 인종/민족별 연령대별 암 발생률(SEER) 제시
+35168767,Disparities in Breast Cancer,INCLUDE,"인종·민족별 발생률·사망률 격차 리뷰, 수치 제시"
+41055508,"Lobular breast cancer statistics, 2025",INCLUDE,"인종/민족별 ILC 발생률(100,000명당) 명시"
+36623243,Contralateral Breast Cancer Risk Among Germline Pathogenic Variants,EXCLUDE,"유전자 변이(BRCA 등) 위험 연구, 인종별 발생률 미제시"
+36541995,The Benefits of Exercise in Breast Cancer,EXCLUDE,"운동 효과 중심, 인종별 발생률 데이터 없음"
+32887656,Aspirin use and risk of breast cancer in African American women,EXCLUDE,"단일 인종(흑인 여성) 대상, 다인종 발생률 비교 없음"
+40858906,Mutational landscape of TNBC in African American women,EXCLUDE,"유전체 연구, 인종별 발생률 수치 미제시"
+27296617,Affluence and Breast Cancer,EXCLUDE,"사회경제적 지위 중심, 인종 간 발생률 비교 부재"
+36622036,Disparities in cancer incidence by rurality in California,INCLUDE,인종/민족별 발생률 비율(IRR) 제시(California Cancer Registry 2015-2019)
+37585204,Patterns in Cancer Incidence Among People Younger Than 50 Years in the US,INCLUDE,인종별 조기 발병 암 발생률 SEER 데이터 포함
+28818244,Breastfeeding and Breast Cancer Risk Reduction: Implications for Black Mothers,EXCLUDE,"모유수유 개입 중심 리뷰, 인종 간 발생률 수치 미제시"
+38612922,Biological Basis of Breast Cancer-Related Disparities,EXCLUDE,"분자생물학적 기전 리뷰, 발생률 수치 미제시"
+25951746,Health disparities across the breast cancer continuum,INCLUDE,백인 대비 소수인종 발생률·결과 격차 비교 리뷰
+37801282,Social Risk Factors That Increase Cardiovascular and Breast Cancer Risk,EXCLUDE,"심혈관·유방암 공유 위험인자 중심, 인종별 발생률 없음"
+37947337,Population simulation modeling of disparities in US breast cancer mortality,INCLUDE,"흑인 vs 전체 미국 여성, 인종별 발생률·사망률 모델링 데이터"
+37370167,Cancer morbidity and mortality trends in Trinidad and Tobago (2008-2018),INCLUDE,민족별(African descent/Indian descent 등) 발생률 데이터
+26918687,Breast cancer inequities between Māori and non-Māori women in NZ,INCLUDE,마오리 vs 비마오리 인종 간 발생률 비교
+41066089,"Pathogenic Variants, Family History, and Cumulative Risk of Breast Cancer in US Women",EXCLUDE,"유전자 변이·가족력 중심, 인종별 발생률 비교 없음"
+38277147,"Breast Cancer Incidence Among US Women Aged 20-49 Years by Race, Stage, and Hormone Receptor Status",INCLUDE,"인종별(Black/White/Hispanic/Asian/AI-AN) 연령대별 ASIR·IRR 수치 제시 (SEER 17, 2000-2019)"
+40553473,"Breast Cancer Incidence Trends in Older US Women by Race, Ethnicity, Geography, and Stage",INCLUDE,인종별 고령 여성(≥65세) 발생률 및 AAPC 수치 제시 (US Cancer Statistics 2001-2019)
+37074714,Race and Ethnicity-Adjusted Age Recommendation for Initiating Breast Cancer Screening,INCLUDE,"인종별 유방암 사망률 격차 수치 제시 (100,000명당 Black 27 vs White 15, 40-49세)"
+28177503,Breast cancer trends differ by ethnicity: South African National Cancer Registry (1994-2009),INCLUDE,"남아공 민족별(Black/White/Coloured/Asian) ASIR 수치 명시 (2009: 18.7~51.2/100,000)"
+41013593,Trends in breast cancer death rates from DCIS versus invasive cancer in the United States,INCLUDE,"인종별 사망률 비율(Black vs White: 1.87배) 및 절대값 수치 제시 (SEER 12, 2017-2021)"
